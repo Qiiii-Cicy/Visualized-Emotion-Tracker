@@ -262,6 +262,21 @@
             font-size: 1.1em;
         }
 
+        .audio-note {
+            font-size: 0.75em;
+            color: #666;
+            text-align: center;
+            margin-top: 8px;
+            padding: 0 10px;
+            line-height: 1.3;
+            font-style: italic;
+        }
+
+        /* 暗色模式下的说明文字样式 */
+        body.dark-mode .audio-note {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
         /* 自定义选择器样式 */
         .custom-select {
             position: relative;
@@ -507,12 +522,29 @@
             }
         }
 
-        .intensity-display {
+        .day-speaker-button {
             min-width: 40px;
-            text-align: center;
-            font-weight: 600;
-            color: #333;
-            font-size: 0.9em;
+            height: 32px;
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .day-speaker-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+
+        .day-speaker-button:active {
+            transform: scale(0.95);
         }
 
         .empty-state {
@@ -657,37 +689,37 @@
                 <div class="day-row" id="monday">
                     <div class="day-name">Monday</div>
                     <div class="emotion-bars"></div>
-                    <div class="intensity-display">0</div>
+                    <button class="day-speaker-button" id="mondaySpeaker" onclick="playDaySounds('monday')" style="display: none;">🔊</button>
                 </div>
                 <div class="day-row" id="tuesday">
                     <div class="day-name">Tuesday</div>
                     <div class="emotion-bars"></div>
-                    <div class="intensity-display">0</div>
+                    <button class="day-speaker-button" id="tuesdaySpeaker" onclick="playDaySounds('tuesday')" style="display: none;">🔊</button>
                 </div>
                 <div class="day-row" id="wednesday">
                     <div class="day-name">Wednesday</div>
                     <div class="emotion-bars"></div>
-                    <div class="intensity-display">0</div>
+                    <button class="day-speaker-button" id="wednesdaySpeaker" onclick="playDaySounds('wednesday')" style="display: none;">🔊</button>
                 </div>
                 <div class="day-row" id="thursday">
                     <div class="day-name">Thursday</div>
                     <div class="emotion-bars"></div>
-                    <div class="intensity-display">0</div>
+                    <button class="day-speaker-button" id="thursdaySpeaker" onclick="playDaySounds('thursday')" style="display: none;">🔊</button>
                 </div>
                 <div class="day-row" id="friday">
                     <div class="day-name">Friday</div>
                     <div class="emotion-bars"></div>
-                    <div class="intensity-display">0</div>
+                    <button class="day-speaker-button" id="fridaySpeaker" onclick="playDaySounds('friday')" style="display: none;">🔊</button>
                 </div>
                 <div class="day-row" id="saturday">
                     <div class="day-name">Saturday</div>
                     <div class="emotion-bars"></div>
-                    <div class="intensity-display">0</div>
+                    <button class="day-speaker-button" id="saturdaySpeaker" onclick="playDaySounds('saturday')" style="display: none;">🔊</button>
                 </div>
                 <div class="day-row" id="sunday">
                     <div class="day-name">Sunday</div>
                     <div class="emotion-bars"></div>
-                    <div class="intensity-display">0</div>
+                    <button class="day-speaker-button" id="sundaySpeaker" onclick="playDaySounds('sunday')" style="display: none;">🔊</button>
                 </div>
             </div>
             </div>
@@ -769,37 +801,15 @@
                     </div>
                 </div>
 
-                <div class="emotion-legend">
-                    <div class="emotion-item">
-                        <div class="emotion-color" style="background: #ff4757;"></div>
-                        <span class="emotion-text">Anger</span>
-                    </div>
-                    <div class="emotion-item">
-                        <div class="emotion-color" style="background: #2ed573;"></div>
-                        <span class="emotion-text">Enjoyment</span>
-                    </div>
-                    <div class="emotion-item">
-                        <div class="emotion-color" style="background: #ffa502;"></div>
-                        <span class="emotion-text">Surprise</span>
-                    </div>
-                    <div class="emotion-item">
-                        <div class="emotion-color" style="background: #2f3542;"></div>
-                        <span class="emotion-text">Fear</span>
-                    </div>
-                    <div class="emotion-item">
-                        <div class="emotion-color" style="background: #8b4513;"></div>
-                        <span class="emotion-text">Disgust</span>
-                    </div>
-                    <div class="emotion-item">
-                        <div class="emotion-color" style="background: #a55eea;"></div>
-                        <span class="emotion-text">Sadness</span>
-                    </div>
-                </div>
 
                 <button class="audio-toggle-button" id="audioToggleBtn" onclick="toggleAudioMode()">
                     <span class="audio-icon">🔊</span>
                     <span class="audio-text">Audio</span>
                 </button>
+                
+                <div class="audio-note">
+                    Note: If you turn on the Audio, you can click the bar to hear your emotion sound
+                </div>
             </div>
         </div>
     </div>
@@ -940,6 +950,12 @@
             const audioIcon = audioBtn.querySelector('.audio-icon');
             const audioText = audioBtn.querySelector('.audio-text');
             
+            // 控制所有喇叭按钮的显示/隐藏
+            const speakerButtons = document.querySelectorAll('.day-speaker-button');
+            speakerButtons.forEach(button => {
+                button.style.display = audioModeEnabled ? 'flex' : 'none';
+            });
+            
             if (audioModeEnabled) {
                 audioBtn.classList.add('active');
                 audioIcon.textContent = '🔇';
@@ -1021,7 +1037,6 @@
         function updateDayDisplay(day, isModify = false) {
             const dayRow = document.getElementById(day);
             const emotionBars = dayRow.querySelector('.emotion-bars');
-            const intensityDisplay = dayRow.querySelector('.intensity-display');
             
             // 如果是修改操作，重新渲染所有bar
             if (isModify) {
@@ -1030,9 +1045,6 @@
             
             // 获取当前已有的bar数量
             const existingBars = emotionBars.children.length;
-            
-            // 计算总强度
-            let totalIntensity = 0;
             
             // 获取心情条容器的可用宽度
             const containerWidth = emotionBars.offsetWidth;
@@ -1067,12 +1079,7 @@
                 setTimeout(() => {
                     emotionBars.appendChild(bar);
                 }, index * 100);
-                
-                totalIntensity += item.intensity;
             });
-            
-            // 更新总强度显示
-            intensityDisplay.textContent = emotionData[day].reduce((sum, item) => sum + item.intensity, 0);
         }
 
         // 清除所有数据
@@ -1087,10 +1094,8 @@
                 Object.keys(emotionData).forEach(day => {
                     const dayRow = document.getElementById(day);
                     const emotionBars = dayRow.querySelector('.emotion-bars');
-                    const intensityDisplay = dayRow.querySelector('.intensity-display');
                     
                     emotionBars.innerHTML = '';
-                    intensityDisplay.textContent = '0';
                 });
                 
                 showNotification('All emotion records cleared');
@@ -1191,6 +1196,62 @@
             oscillator.stop(audioContext.currentTime + 0.5); // 播放0.5秒
             
             showNotification(`Playing ${getEmotionName(emotion)} audio (Volume ${intensity})`);
+        }
+
+        // 播放某天所有emotion的叠加声音
+        function playDaySounds(day) {
+            if (!audioModeEnabled) return;
+            
+            const dayEmotions = emotionData[day];
+            if (dayEmotions.length === 0) {
+                showNotification(`${getDayName(day)} has no emotions to play`);
+                return;
+            }
+            
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const gainNode = audioContext.createGain();
+            gainNode.connect(audioContext.destination);
+            
+            // 根据心情设置不同的频率
+            const frequencies = {
+                anger: 200,      // 低频率，表示愤怒
+                enjoyment: 400,  // 中高频率，表示快乐
+                surprise: 600,   // 高频率，表示惊讶
+                fear: 150,       // 很低频率，表示恐惧
+                disgust: 250,    // 中低频率，表示厌恶
+                sadness: 180     // 低频率，表示悲伤
+            };
+            
+            // 创建所有emotion的oscillator
+            const oscillators = [];
+            let totalVolume = 0;
+            
+            dayEmotions.forEach((item, index) => {
+                const oscillator = audioContext.createOscillator();
+                const itemGainNode = audioContext.createGain();
+                
+                oscillator.frequency.setValueAtTime(frequencies[item.emotion], audioContext.currentTime);
+                oscillator.type = 'sine';
+                
+                // 根据强度设置音量，并稍微降低以避免过响
+                const volume = (item.intensity / 5) * 0.15; // 降低到0.15避免过响
+                itemGainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                totalVolume += volume;
+                
+                oscillator.connect(itemGainNode);
+                itemGainNode.connect(gainNode);
+                
+                // 稍微错开开始时间
+                oscillator.start(audioContext.currentTime + (index * 0.05));
+                oscillator.stop(audioContext.currentTime + 1.0 + (index * 0.05));
+                
+                oscillators.push(oscillator);
+            });
+            
+            // 设置总音量控制
+            gainNode.gain.setValueAtTime(Math.min(totalVolume, 0.5), audioContext.currentTime);
+            
+            showNotification(`Playing ${getDayName(day)} emotions mix (${dayEmotions.length} emotions)`);
         }
     </script>
 </body>
