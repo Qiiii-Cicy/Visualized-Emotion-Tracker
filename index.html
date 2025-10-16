@@ -262,6 +262,68 @@
             font-size: 1.1em;
         }
 
+        /* 自定义range slider样式 */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            outline: none;
+            padding: 0;
+            border: none;
+            position: relative;
+            width: 100%;
+        }
+
+        /* 为range slider添加进度填充效果 */
+        input[type="range"]::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: var(--progress, 60%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            pointer-events: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 0;
+            height: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 0;
+            height: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-track {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            border: none;
+        }
+
+        /* 暗色模式下的range slider样式 */
+        body.dark-mode input[type="range"] {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode input[type="range"]::-moz-range-track {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         .audio-note {
             font-size: 0.75em;
             color: #666;
@@ -838,13 +900,25 @@
             sadness: 'sadness'
         };
 
+        // 更新range slider进度条
+        function updateRangeProgress(rangeElement) {
+            const value = parseInt(rangeElement.value);
+            // 1=20%, 2=40%, 3=60%, 4=80%, 5=100%
+            const percentage = (value / 5) * 100;
+            rangeElement.style.setProperty('--progress', percentage + '%');
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             const intensityRange = document.getElementById('intensityRange');
             const intensityValue = document.getElementById('intensityValue');
             
+            // 初始化进度条
+            updateRangeProgress(intensityRange);
+            
             intensityRange.addEventListener('input', function() {
                 intensityValue.textContent = this.value;
+                updateRangeProgress(this);
             });
 
 
@@ -1241,7 +1315,7 @@
                 oscillator.connect(itemGainNode);
                 itemGainNode.connect(gainNode);
                 
-                // 稍微错开开始时间
+                // 稍微错开开始时间，创造更丰富的音效
                 oscillator.start(audioContext.currentTime + (index * 0.05));
                 oscillator.stop(audioContext.currentTime + 1.0 + (index * 0.05));
                 
