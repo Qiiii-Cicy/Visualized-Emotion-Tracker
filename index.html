@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualized Emotion Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f6fafc;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: transparent;
+            color: #2d3748;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .theme-toggle:active {
+            transform: translateY(0);
+        }
+
+        .theme-icon {
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+        }
+
+        .input-section {
+            width: 20%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.02);
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .input-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .input-item label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.8em;
+        }
+
+        select, input[type="range"] {
+            padding: 8px 12px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 0.9em;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        select:focus, input[type="range"]:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .emotion-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .emotion-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .emotion-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .emotion-text {
+            font-size: 0.8em;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .add-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .add-button:active {
+            transform: translateY(0);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modify-button {
+            background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 167, 38, 0.3);
+            flex: 1;
+        }
+
+        .modify-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 167, 38, 0.4);
+        }
+
+        .modify-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .modify-button:disabled {
+            background: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .add-button {
+            flex: 1;
+        }
+
+        .audio-toggle-button {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .audio-toggle-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .audio-toggle-button:active {
+            transform: translateY(0);
+        }
+
+        .audio-toggle-button.active {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .audio-toggle-button.active:hover {
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        .audio-icon {
+            font-size: 1.1em;
+        }
+
+        /* 自定义选择器样式 */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-trigger:hover {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .select-arrow {
+            font-size: 0.8em;
+            color: #666;
+            transition: transform 0.3s ease;
+        }
+
+        .custom-select.open .select-arrow {
+            transform: rotate(180deg);
+        }
+
+        .select-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .custom-select.open .select-options {
+            display: block;
+        }
+
+        .select-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .select-option:hover {
+            background-color: rgba(79, 172, 254, 0.1);
+        }
+
+        .select-trigger .emotion-item,
+        .select-option .emotion-item {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        /* 暗色模式下的自定义选择器样式 */
+        body.dark-mode .select-trigger {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        body.dark-mode .select-trigger:hover {
+            border-color: #4facfe;
+        }
+
+        body.dark-mode .select-options {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-mode .select-option:hover {
+            background-color: rgba(79, 172, 254, 0.2);
+        }
+
+        .main-table {
+            width: 80%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.01);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .table-title {
+            font-size: 1.4em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .clear-button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .clear-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .week-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .day-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .day-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-name {
+            min-width: 80px;
+            font-size: 1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .emotion-bars {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            min-height: 30px;
+            padding: 6px 0;
+            max-width: 100%;
+        }
+
+
+        .emotion-bar {
+            height: 24px;
+            border-radius: 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .emotion-bar:hover {
+            transform: scaleY(1.1);
+            z-index: 10;
+        }
+
+        /* 悬停提示框样式 */
+        .emotion-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .emotion-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .emotion-bar:hover .emotion-tooltip {
+            opacity: 1;
+        }
+
+
+        .emotion-bar.anger { background: #ff4757; }
+        .emotion-bar.enjoyment { background: #2ed573; }
+        .emotion-bar.surprise { background: #ffa502; }
+        .emotion-bar.fear { background: #2f3542; }
+        .emotion-bar.disgust { background: #8b4513; }
+        .emotion-bar.sadness { background: #a55eea; }
+
+
+        .emotion-bar.growing {
+            animation: growBar 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes growBar {
+            0% {
+                width: 0;
+                opacity: 0;
+                transform: scaleX(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scaleX(1.1);
+            }
+            100% {
+                transform: scaleX(1);
+            }
+        }
+
+        .intensity-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: rgba(0, 0, 0, 0.5);
+            font-style: italic;
+            padding: 10px;
+        }
+
+        /* 暗色模式样式 */
+        body.dark-mode {
+            background: #2d3748;
+        }
+
+        body.dark-mode .header {
+            color: white;
+        }
+
+        body.dark-mode .input-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .input-item label {
+            color: white;
+        }
+
+        body.dark-mode select, 
+        body.dark-mode input[type="range"] {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        body.dark-mode .emotion-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .emotion-text {
+            color: white;
+        }
+
+        body.dark-mode .main-table {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode .table-title {
+            color: white;
+        }
+
+        body.dark-mode .day-row {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .day-name {
+            color: white;
+        }
+
+        body.dark-mode .intensity-display {
+            color: white;
+        }
+
+        body.dark-mode .empty-state {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .main-table {
+                width: 100%;
+            }
+            
+            .input-section {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            body.dark-mode .input-section {
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            
+            .input-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .input-item {
+                min-width: 150px;
+            }
+            
+            .emotion-legend {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .day-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .emotion-bars {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .theme-toggle {
+                position: static;
+                margin: 10px auto 0;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Visualized Emotion Tracker</h1>
+            <!-- <p>Record your daily mood changes and visualize emotions</p> -->
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span class="theme-icon">🌙</span>
+                <span class="theme-text">Dark Mode</span>
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div class="main-table">
+            <div class="table-header">
+                <h2 class="table-title">Weekly Emotion Records</h2>
+                <button class="clear-button" onclick="clearAll()">Clear All</button>
+            </div>
+
+            <div class="week-container" id="weekContainer">
+                <div class="day-row" id="monday">
+                    <div class="day-name">Monday</div>
+                    <div class="emotion-bars"></div>
+                    <div class="intensity-display">0</div>
+                </div>
+                <div class="day-row" id="tuesday">
+                    <div class="day-name">Tuesday</div>
+                    <div class="emotion-bars"></div>
+                    <div class="intensity-display">0</div>
+                </div>
+                <div class="day-row" id="wednesday">
+                    <div class="day-name">Wednesday</div>
+                    <div class="emotion-bars"></div>
+                    <div class="intensity-display">0</div>
+                </div>
+                <div class="day-row" id="thursday">
+                    <div class="day-name">Thursday</div>
+                    <div class="emotion-bars"></div>
+                    <div class="intensity-display">0</div>
+                </div>
+                <div class="day-row" id="friday">
+                    <div class="day-name">Friday</div>
+                    <div class="emotion-bars"></div>
+                    <div class="intensity-display">0</div>
+                </div>
+                <div class="day-row" id="saturday">
+                    <div class="day-name">Saturday</div>
+                    <div class="emotion-bars"></div>
+                    <div class="intensity-display">0</div>
+                </div>
+                <div class="day-row" id="sunday">
+                    <div class="day-name">Sunday</div>
+                    <div class="emotion-bars"></div>
+                    <div class="intensity-display">0</div>
+                </div>
+            </div>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <div class="input-item">
+                        <label for="daySelect">Select the Day</label>
+                        <select id="daySelect">
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                            <option value="sunday">Sunday</option>
+                        </select>
+                    </div>
+
+                    <div class="input-item">
+                        <label for="emotionSelect">Select Emotion</label>
+                        <div class="custom-select" id="emotionSelect">
+                            <div class="select-trigger" onclick="toggleEmotionSelect()">
+                                <div class="emotion-item">
+                                    <div class="emotion-color" style="background: #ff4757;"></div>
+                                    <span class="emotion-text">Anger</span>
+                                </div>
+                                <span class="select-arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="emotionSelectOptions">
+                                <div class="select-option" data-value="anger" onclick="selectEmotion('anger')">
+                                    <div class="emotion-item">
+                                        <div class="emotion-color" style="background: #ff4757;"></div>
+                                        <span class="emotion-text">Anger</span>
+                                    </div>
+                                </div>
+                                <div class="select-option" data-value="enjoyment" onclick="selectEmotion('enjoyment')">
+                                    <div class="emotion-item">
+                                        <div class="emotion-color" style="background: #2ed573;"></div>
+                                        <span class="emotion-text">Enjoyment</span>
+                                    </div>
+                                </div>
+                                <div class="select-option" data-value="surprise" onclick="selectEmotion('surprise')">
+                                    <div class="emotion-item">
+                                        <div class="emotion-color" style="background: #ffa502;"></div>
+                                        <span class="emotion-text">Surprise</span>
+                                    </div>
+                                </div>
+                                <div class="select-option" data-value="fear" onclick="selectEmotion('fear')">
+                                    <div class="emotion-item">
+                                        <div class="emotion-color" style="background: #2f3542;"></div>
+                                        <span class="emotion-text">Fear</span>
+                                    </div>
+                                </div>
+                                <div class="select-option" data-value="disgust" onclick="selectEmotion('disgust')">
+                                    <div class="emotion-item">
+                                        <div class="emotion-color" style="background: #8b4513;"></div>
+                                        <span class="emotion-text">Disgust</span>
+                                    </div>
+                                </div>
+                                <div class="select-option" data-value="sadness" onclick="selectEmotion('sadness')">
+                                    <div class="emotion-item">
+                                        <div class="emotion-color" style="background: #a55eea;"></div>
+                                        <span class="emotion-text">Sadness</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-item">
+                        <label for="intensityRange">Intensity: <span id="intensityValue">3</span></label>
+                        <input type="range" id="intensityRange" min="1" max="5" value="3">
+                    </div>
+
+                    <div class="button-group">
+                        <button class="add-button" id="addEmotionBtn" onclick="addEmotion()">Add Emotion</button>
+                        <button class="modify-button" id="modifyEmotionBtn" onclick="modifyEmotion()" disabled>Modify Emotion</button>
+                    </div>
+                </div>
+
+                <div class="emotion-legend">
+                    <div class="emotion-item">
+                        <div class="emotion-color" style="background: #ff4757;"></div>
+                        <span class="emotion-text">Anger</span>
+                    </div>
+                    <div class="emotion-item">
+                        <div class="emotion-color" style="background: #2ed573;"></div>
+                        <span class="emotion-text">Enjoyment</span>
+                    </div>
+                    <div class="emotion-item">
+                        <div class="emotion-color" style="background: #ffa502;"></div>
+                        <span class="emotion-text">Surprise</span>
+                    </div>
+                    <div class="emotion-item">
+                        <div class="emotion-color" style="background: #2f3542;"></div>
+                        <span class="emotion-text">Fear</span>
+                    </div>
+                    <div class="emotion-item">
+                        <div class="emotion-color" style="background: #8b4513;"></div>
+                        <span class="emotion-text">Disgust</span>
+                    </div>
+                    <div class="emotion-item">
+                        <div class="emotion-color" style="background: #a55eea;"></div>
+                        <span class="emotion-text">Sadness</span>
+                    </div>
+                </div>
+
+                <button class="audio-toggle-button" id="audioToggleBtn" onclick="toggleAudioMode()">
+                    <span class="audio-icon">🔊</span>
+                    <span class="audio-text">Audio</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // 心情数据存储
+        const emotionData = {
+            monday: [],
+            tuesday: [],
+            wednesday: [],
+            thursday: [],
+            friday: [],
+            saturday: [],
+            sunday: []
+        };
+
+
+        // 心情颜色映射
+        const emotionColors = {
+            anger: 'anger',
+            enjoyment: 'enjoyment',
+            surprise: 'surprise',
+            fear: 'fear',
+            disgust: 'disgust',
+            sadness: 'sadness'
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const intensityRange = document.getElementById('intensityRange');
+            const intensityValue = document.getElementById('intensityValue');
+            
+            intensityRange.addEventListener('input', function() {
+                intensityValue.textContent = this.value;
+            });
+
+
+            // 日期选择器变化时更新按钮状态
+            const daySelect = document.getElementById('daySelect');
+            daySelect.addEventListener('change', function() {
+                updateButtonStates();
+            });
+
+            // 初始化按钮状态
+            updateButtonStates();
+
+            // 初始化主题
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+        });
+
+        // 主题切换功能
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+            const themeText = document.querySelector('.theme-text');
+            
+            if (body.classList.contains('dark-mode')) {
+                // 切换到亮色模式
+                body.classList.remove('dark-mode');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                // 切换到暗色模式
+                body.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // 设置主题
+        function setTheme(theme) {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+            const themeText = document.querySelector('.theme-text');
+            
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+            } else {
+                body.classList.remove('dark-mode');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+            }
+        }
+
+        // 自定义选择器功能
+        let selectedEmotion = 'anger';
+        let audioModeEnabled = false;
+
+        function toggleEmotionSelect() {
+            const customSelect = document.getElementById('emotionSelect');
+            customSelect.classList.toggle('open');
+        }
+
+        function selectEmotion(emotion) {
+            selectedEmotion = emotion;
+            const customSelect = document.getElementById('emotionSelect');
+            const trigger = customSelect.querySelector('.select-trigger .emotion-item');
+            
+            // 更新显示的emotion
+            const emotionData = {
+                anger: { color: '#ff4757', name: 'Anger' },
+                enjoyment: { color: '#2ed573', name: 'Enjoyment' },
+                surprise: { color: '#ffa502', name: 'Surprise' },
+                fear: { color: '#2f3542', name: 'Fear' },
+                disgust: { color: '#8b4513', name: 'Disgust' },
+                sadness: { color: '#a55eea', name: 'Sadness' }
+            };
+            
+            const selectedData = emotionData[emotion];
+            trigger.querySelector('.emotion-color').style.background = selectedData.color;
+            trigger.querySelector('.emotion-text').textContent = selectedData.name;
+            
+            // 关闭下拉菜单
+            customSelect.classList.remove('open');
+            
+            // 检查按钮状态
+            updateButtonStates();
+        }
+
+        // 点击外部关闭下拉菜单
+        document.addEventListener('click', function(event) {
+            const customSelect = document.getElementById('emotionSelect');
+            if (!customSelect.contains(event.target)) {
+                customSelect.classList.remove('open');
+            }
+        });
+
+        // 切换音频模式
+        function toggleAudioMode() {
+            audioModeEnabled = !audioModeEnabled;
+            const audioBtn = document.getElementById('audioToggleBtn');
+            const audioIcon = audioBtn.querySelector('.audio-icon');
+            const audioText = audioBtn.querySelector('.audio-text');
+            
+            if (audioModeEnabled) {
+                audioBtn.classList.add('active');
+                audioIcon.textContent = '🔇';
+                audioText.textContent = 'Audio Off';
+                showNotification('Audio mode enabled - Click emotion bars to play sounds');
+            } else {
+                audioBtn.classList.remove('active');
+                audioIcon.textContent = '🔊';
+                audioText.textContent = 'Audio';
+                showNotification('Audio mode disabled');
+            }
+        }
+
+        // 更新按钮状态
+        function updateButtonStates() {
+            const day = document.getElementById('daySelect').value;
+            const addBtn = document.getElementById('addEmotionBtn');
+            const modifyBtn = document.getElementById('modifyEmotionBtn');
+            
+            // 检查当前选择的emotion是否已经在今天添加过
+            const hasEmotionToday = emotionData[day].some(item => item.emotion === selectedEmotion);
+            
+            if (hasEmotionToday) {
+                // 如果该emotion今天已经添加过，启用Modify按钮，禁用Add按钮
+                addBtn.disabled = true;
+                modifyBtn.disabled = false;
+            } else {
+                // 如果该emotion今天没有添加过，启用Add按钮，禁用Modify按钮
+                addBtn.disabled = false;
+                modifyBtn.disabled = true;
+            }
+        }
+
+        // 修改emotion
+        function modifyEmotion() {
+            const day = document.getElementById('daySelect').value;
+            const intensity = parseInt(document.getElementById('intensityRange').value);
+            
+            // 找到该emotion在今天的记录
+            const emotionIndex = emotionData[day].findIndex(item => item.emotion === selectedEmotion);
+            
+            if (emotionIndex !== -1) {
+                // 更新intensity
+                emotionData[day][emotionIndex].intensity = intensity;
+                emotionData[day][emotionIndex].timestamp = Date.now();
+                
+                // 重新渲染该天的显示（传递isModify=true）
+                updateDayDisplay(day, true);
+                
+                // 显示成功提示
+                showNotification(`Modified ${getDayName(day)} ${getEmotionName(selectedEmotion)} emotion to Level ${intensity}`);
+            }
+        }
+
+        // 添加心情
+        function addEmotion() {
+            const day = document.getElementById('daySelect').value;
+            const emotion = selectedEmotion;
+            const intensity = parseInt(document.getElementById('intensityRange').value);
+
+            // 添加到数据
+            emotionData[day].push({
+                emotion: emotion,
+                intensity: intensity,
+                timestamp: Date.now()
+            });
+
+            // 更新显示
+            updateDayDisplay(day);
+            
+            // 更新按钮状态
+            updateButtonStates();
+            
+            // 添加成功提示
+            showNotification(`Added ${getDayName(day)} ${getEmotionName(emotion)} emotion (Level ${intensity})`);
+        }
+
+        // 更新某天的显示
+        function updateDayDisplay(day, isModify = false) {
+            const dayRow = document.getElementById(day);
+            const emotionBars = dayRow.querySelector('.emotion-bars');
+            const intensityDisplay = dayRow.querySelector('.intensity-display');
+            
+            // 如果是修改操作，重新渲染所有bar
+            if (isModify) {
+                emotionBars.innerHTML = '';
+            }
+            
+            // 获取当前已有的bar数量
+            const existingBars = emotionBars.children.length;
+            
+            // 计算总强度
+            let totalIntensity = 0;
+            
+            // 获取心情条容器的可用宽度
+            const containerWidth = emotionBars.offsetWidth;
+            const maxTotalIntensity = 30; // 6个心情 × 5级程度 = 30级
+            
+            // 如果是修改操作，渲染所有bar；否则只添加新的bar
+            const barsToProcess = isModify ? emotionData[day] : emotionData[day].slice(existingBars);
+            
+            barsToProcess.forEach((item, index) => {
+                const bar = document.createElement('div');
+                bar.className = `emotion-bar ${emotionColors[item.emotion]} growing`;
+                
+                // 计算每个心情条的宽度百分比
+                const intensityPercentage = (item.intensity / maxTotalIntensity) * 100;
+                bar.style.width = `${intensityPercentage}%`;
+                bar.title = `${getEmotionName(item.emotion)} (Level ${item.intensity})`;
+                
+                // 创建悬停提示框
+                const tooltip = document.createElement('div');
+                tooltip.className = 'emotion-tooltip';
+                tooltip.textContent = `${getEmotionName(item.emotion)} (${item.intensity})`;
+                bar.appendChild(tooltip);
+                
+                // 添加点击事件监听器（用于音频播放）
+                bar.addEventListener('click', function() {
+                    if (audioModeEnabled) {
+                        playAudioEmotion(item.emotion, item.intensity);
+                    }
+                });
+                
+                // 延迟添加动画效果
+                setTimeout(() => {
+                    emotionBars.appendChild(bar);
+                }, index * 100);
+                
+                totalIntensity += item.intensity;
+            });
+            
+            // 更新总强度显示
+            intensityDisplay.textContent = emotionData[day].reduce((sum, item) => sum + item.intensity, 0);
+        }
+
+        // 清除所有数据
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all emotion records?')) {
+                // 清空数据
+                Object.keys(emotionData).forEach(day => {
+                    emotionData[day] = [];
+                });
+                
+                // 清空显示
+                Object.keys(emotionData).forEach(day => {
+                    const dayRow = document.getElementById(day);
+                    const emotionBars = dayRow.querySelector('.emotion-bars');
+                    const intensityDisplay = dayRow.querySelector('.intensity-display');
+                    
+                    emotionBars.innerHTML = '';
+                    intensityDisplay.textContent = '0';
+                });
+                
+                showNotification('All emotion records cleared');
+            }
+        }
+
+        // 获取星期名称
+        function getDayName(day) {
+            const dayNames = {
+                monday: 'Monday',
+                tuesday: 'Tuesday',
+                wednesday: 'Wednesday',
+                thursday: 'Thursday',
+                friday: 'Friday',
+                saturday: 'Saturday',
+                sunday: 'Sunday'
+            };
+            return dayNames[day];
+        }
+
+        // 获取心情名称
+        function getEmotionName(emotion) {
+            const emotionNames = {
+                anger: 'Anger',
+                enjoyment: 'Enjoyment',
+                surprise: 'Surprise',
+                fear: 'Fear',
+                disgust: 'Disgust',
+                sadness: 'Sadness'
+            };
+            return emotionNames[emotion];
+        }
+
+        // 显示通知
+        function showNotification(message) {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                font-weight: 600;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // 自动隐藏
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // 播放音频心情（用于emotion-bar点击播放）
+        function playAudioEmotion(emotion, intensity) {
+            // 使用Web Audio API生成音频
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            // 根据心情设置不同的频率
+            const frequencies = {
+                anger: 200,      // 低频率，表示愤怒
+                enjoyment: 400,  // 中高频率，表示快乐
+                surprise: 600,   // 高频率，表示惊讶
+                fear: 150,       // 很低频率，表示恐惧
+                disgust: 250,    // 中低频率，表示厌恶
+                sadness: 180     // 低频率，表示悲伤
+            };
+            
+            oscillator.frequency.setValueAtTime(frequencies[emotion], audioContext.currentTime);
+            oscillator.type = 'sine';
+            
+            // 根据强度设置音量
+            const volume = intensity / 5 * 0.3; // 最大音量0.3
+            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.5); // 播放0.5秒
+            
+            showNotification(`Playing ${getEmotionName(emotion)} audio (Volume ${intensity})`);
+        }
+    </script>
+</body>
+</html>
