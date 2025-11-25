@@ -12,10 +12,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background: #f6fafc;
             min-height: 100vh;
             padding: 10px;
+            font-size: 70%; /* 所有文字缩小30%，除了emotion-sound-text */
         }
 
         .container {
@@ -36,9 +37,10 @@
         }
 
         .header h1 {
-            font-size: 1.8em;
+            font-size: 2.5em;
             margin-bottom: 5px;
-            font-weight: 300;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         .header p {
@@ -160,25 +162,54 @@
         }
 
         .add-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 10px 20px;
-            border-radius: 20px;
+            border-radius: 12px;
             font-size: 0.9em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .add-button:hover {
+        .add-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .add-button:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .add-button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
-        .add-button:active {
+        .add-button:active:not(:disabled) {
             transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-button:disabled {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            border-color: #d1d5db;
         }
 
         .button-group {
@@ -187,34 +218,55 @@
         }
 
         .modify-button {
-            background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 10px 20px;
-            border-radius: 20px;
+            border-radius: 12px;
             font-size: 0.9em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 167, 38, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modify-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .modify-button:hover:not(:disabled)::before {
+            left: 100%;
         }
 
         .modify-button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 167, 38, 0.4);
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .modify-button:active:not(:disabled) {
             transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .modify-button:disabled {
-            background: #cccccc;
-            color: #666666;
+            background: #e5e7eb;
+            color: #9ca3af;
             cursor: not-allowed;
             box-shadow: none;
             transform: none;
+            border-color: #d1d5db;
         }
 
         .add-button {
@@ -222,44 +274,160 @@
         }
 
         .audio-toggle-button {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 12px 20px;
-            border-radius: 20px;
+            border-radius: 12px;
             font-size: 0.9em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             width: 100%;
             margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-toggle-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .audio-toggle-button:hover::before {
+            left: 100%;
         }
 
         .audio-toggle-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .audio-toggle-button:active {
             transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .audio-toggle-button.active {
-            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
         .audio-toggle-button.active:hover {
-            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .audio-icon {
             font-size: 1.1em;
+        }
+
+        /* Emotion Sound Buttons */
+        .emotion-sound-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2列 */
+            grid-template-rows: repeat(3, 1fr); /* 3行 */
+            gap: 8px;
+            margin-top: 20px;
+            width: 100%; /* 与audio按键等宽 */
+            /* 高度缩小50%后再缩小15%：原来的一半 * 0.85 */
+            height: calc((7 * 54px + 6 * 8px) * 0.5 * 0.85);
+            min-height: 0; /* 允许grid items缩小 */
+        }
+
+        .emotion-sound-button {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 6px;
+            font-size: 0.65em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .emotion-sound-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .emotion-sound-button:hover::before {
+            left: 100%;
+        }
+
+        .emotion-sound-button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .emotion-sound-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .emotion-sound-button:disabled {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            border-color: #d1d5db;
+            opacity: 0.5;
+        }
+
+        .emotion-sound-image {
+            height: calc(100% - 12px); /* 高度 = 按钮高度减去上下padding */
+            width: auto; /* 宽度由aspect-ratio自动计算 */
+            aspect-ratio: 1; /* 保持正方形 */
+            max-width: calc((100% - 12px - 8px) * 0.45); /* 限制最大宽度，约45%给图片，55%给文字 */
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .emotion-sound-text {
+            font-weight: 600;
+            text-align: left;
+            font-size: 9px !important;
+            line-height: 1.1;
+            flex: 1;
+            padding-right: 4px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* 自定义range slider样式 */
@@ -415,7 +583,7 @@
         /* 暗色模式下的自定义选择器样式 */
         body.dark-mode .select-trigger {
             border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         body.dark-mode .select-trigger:hover {
@@ -423,12 +591,18 @@
         }
 
         body.dark-mode .select-options {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         body.dark-mode .select-option:hover {
             background-color: rgba(79, 172, 254, 0.2);
+        }
+
+        /* 暗色模式下select emotion模块中的emotion文字改为黑色 */
+        body.dark-mode .select-trigger .emotion-text,
+        body.dark-mode .select-option .emotion-text {
+            color: #000000 !important;
         }
 
         .main-table {
@@ -451,21 +625,45 @@
         }
 
         .clear-button {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 8px 16px;
-            border-radius: 15px;
+            border-radius: 10px;
             font-size: 0.9em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clear-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .clear-button:hover::before {
+            left: 100%;
         }
 
         .clear-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .clear-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .week-container {
@@ -587,26 +785,46 @@
         .day-speaker-button {
             min-width: 40px;
             height: 32px;
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
             font-size: 1.2em;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-speaker-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .day-speaker-button:hover::before {
+            left: 100%;
         }
 
         .day-speaker-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            transform: scale(1.08);
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .day-speaker-button:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .empty-state {
@@ -672,6 +890,37 @@
 
         body.dark-mode .empty-state {
             color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Dark mode下Day几模块改为白色底 */
+        body.dark-mode #currentDayDisplay {
+            color: #2d3748 !important;
+            background: #ffffff !important;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        body.dark-mode input[type="text"],
+        body.dark-mode input[type="password"] {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        body.dark-mode #loginModal > div {
+            background: #2d3748;
+        }
+
+        body.dark-mode #loginModal h2,
+        body.dark-mode #loginModal label {
+            color: white;
+        }
+
+        body.dark-mode #loginModal input[type="text"] {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
         }
 
         @media (max-width: 768px) {
@@ -743,64 +992,54 @@
         <div class="main-content">
             <div class="main-table">
             <div class="table-header">
-                <h2 class="table-title">Weekly Emotion Records</h2>
-                <button class="clear-button" onclick="clearAll()">Clear All</button>
+                <h2 class="table-title">Weekly Emotion Records - <span id="currentWeekDisplay">Week 1</span> - <span id="currentDayDisplay" style="color: #4a5568; font-weight: 600; background: rgba(74, 85, 104, 0.1); padding: 4px 12px; border-radius: 8px;">Day 1</span></h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="clear-button" onclick="clearAll()">Clear All</button>
+                    <button class="clear-button" onclick="showLoginModal()">Switch User/Week</button>
+                </div>
             </div>
 
             <div class="week-container" id="weekContainer">
-                <div class="day-row" id="monday">
-                    <div class="day-name">Monday</div>
+                <div class="day-row" id="day1">
+                    <div class="day-name">Day 1</div>
                     <div class="emotion-bars"></div>
-                    <button class="day-speaker-button" id="mondaySpeaker" onclick="playDaySounds('monday')" style="display: none;">🔊</button>
+                    <button class="day-speaker-button" id="day1Speaker" onclick="playDaySounds('day1')" style="display: none;">🔊</button>
                 </div>
-                <div class="day-row" id="tuesday">
-                    <div class="day-name">Tuesday</div>
+                <div class="day-row" id="day2">
+                    <div class="day-name">Day 2</div>
                     <div class="emotion-bars"></div>
-                    <button class="day-speaker-button" id="tuesdaySpeaker" onclick="playDaySounds('tuesday')" style="display: none;">🔊</button>
+                    <button class="day-speaker-button" id="day2Speaker" onclick="playDaySounds('day2')" style="display: none;">🔊</button>
                 </div>
-                <div class="day-row" id="wednesday">
-                    <div class="day-name">Wednesday</div>
+                <div class="day-row" id="day3">
+                    <div class="day-name">Day 3</div>
                     <div class="emotion-bars"></div>
-                    <button class="day-speaker-button" id="wednesdaySpeaker" onclick="playDaySounds('wednesday')" style="display: none;">🔊</button>
+                    <button class="day-speaker-button" id="day3Speaker" onclick="playDaySounds('day3')" style="display: none;">🔊</button>
                 </div>
-                <div class="day-row" id="thursday">
-                    <div class="day-name">Thursday</div>
+                <div class="day-row" id="day4">
+                    <div class="day-name">Day 4</div>
                     <div class="emotion-bars"></div>
-                    <button class="day-speaker-button" id="thursdaySpeaker" onclick="playDaySounds('thursday')" style="display: none;">🔊</button>
+                    <button class="day-speaker-button" id="day4Speaker" onclick="playDaySounds('day4')" style="display: none;">🔊</button>
                 </div>
-                <div class="day-row" id="friday">
-                    <div class="day-name">Friday</div>
+                <div class="day-row" id="day5">
+                    <div class="day-name">Day 5</div>
                     <div class="emotion-bars"></div>
-                    <button class="day-speaker-button" id="fridaySpeaker" onclick="playDaySounds('friday')" style="display: none;">🔊</button>
+                    <button class="day-speaker-button" id="day5Speaker" onclick="playDaySounds('day5')" style="display: none;">🔊</button>
                 </div>
-                <div class="day-row" id="saturday">
-                    <div class="day-name">Saturday</div>
+                <div class="day-row" id="day6">
+                    <div class="day-name">Day 6</div>
                     <div class="emotion-bars"></div>
-                    <button class="day-speaker-button" id="saturdaySpeaker" onclick="playDaySounds('saturday')" style="display: none;">🔊</button>
+                    <button class="day-speaker-button" id="day6Speaker" onclick="playDaySounds('day6')" style="display: none;">🔊</button>
                 </div>
-                <div class="day-row" id="sunday">
-                    <div class="day-name">Sunday</div>
+                <div class="day-row" id="day7">
+                    <div class="day-name">Day 7</div>
                     <div class="emotion-bars"></div>
-                    <button class="day-speaker-button" id="sundaySpeaker" onclick="playDaySounds('sunday')" style="display: none;">🔊</button>
+                    <button class="day-speaker-button" id="day7Speaker" onclick="playDaySounds('day7')" style="display: none;">🔊</button>
                 </div>
             </div>
             </div>
 
             <div class="input-section">
                 <div class="input-group">
-                    <div class="input-item">
-                        <label for="daySelect">Select the Day</label>
-                        <select id="daySelect">
-                            <option value="monday">Monday</option>
-                            <option value="tuesday">Tuesday</option>
-                            <option value="wednesday">Wednesday</option>
-                            <option value="thursday">Thursday</option>
-                            <option value="friday">Friday</option>
-                            <option value="saturday">Saturday</option>
-                            <option value="sunday">Sunday</option>
-                        </select>
-                    </div>
-
                     <div class="input-item">
                         <label for="emotionSelect">Select Emotion</label>
                         <div class="custom-select" id="emotionSelect">
@@ -872,22 +1111,137 @@
                 <div class="audio-note">
                     Note: If you turn on the Audio, you can click the bar to hear your emotion sound
                 </div>
+
+                <!-- Emotion Sound Buttons -->
+                <div class="emotion-sound-buttons" id="emotionSoundButtons">
+                    <button class="emotion-sound-button" data-emotion="anger" onclick="playEmotionSound('anger')">
+                        <img src="static/anger.jpg" alt="Anger" class="emotion-sound-image">
+                        <span class="emotion-sound-text">Anger</span>
+                    </button>
+                    <button class="emotion-sound-button" data-emotion="enjoyment" onclick="playEmotionSound('enjoyment')">
+                        <img src="static/enjoy.jpg" alt="Enjoyment" class="emotion-sound-image">
+                        <span class="emotion-sound-text">Enjoyment</span>
+                    </button>
+                    <button class="emotion-sound-button" data-emotion="surprise" onclick="playEmotionSound('surprise')">
+                        <img src="static/surprise.jpg" alt="Surprise" class="emotion-sound-image">
+                        <span class="emotion-sound-text">Surprise</span>
+                    </button>
+                    <button class="emotion-sound-button" data-emotion="fear" onclick="playEmotionSound('fear')">
+                        <img src="static/fear.jpg" alt="Fear" class="emotion-sound-image">
+                        <span class="emotion-sound-text">Fear</span>
+                    </button>
+                    <button class="emotion-sound-button" data-emotion="disgust" onclick="playEmotionSound('disgust')">
+                        <img src="static/disgust.jpg" alt="Disgust" class="emotion-sound-image">
+                        <span class="emotion-sound-text">Disgust</span>
+                    </button>
+                    <button class="emotion-sound-button" data-emotion="sadness" onclick="playEmotionSound('sadness')">
+                        <img src="static/sadness.jpg" alt="Sadness" class="emotion-sound-image">
+                        <span class="emotion-sound-text">Sadness</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 初始登录弹窗 -->
+    <div id="loginModal" style="display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 2000; overflow-y: auto;">
+        <div style="background: white; margin: 100px auto; padding: 40px; border-radius: 15px; max-width: 500px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
+            <h2 style="color: #333; margin-bottom: 30px; text-align: center; font-size: 1.8em;">Welcome to Emotion Tracker</h2>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label for="loginUserId" style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">User ID</label>
+                    <input type="text" id="loginUserId" placeholder="Enter your User ID" onkeypress="if(event.key==='Enter') document.getElementById('loginWeek').focus()" style="padding: 12px; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 8px; font-size: 1em; width: 100%; box-sizing: border-box;">
+                </div>
+                <div>
+                    <label for="loginWeek" style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Week</label>
+                    <input type="text" id="loginWeek" placeholder="Enter week (e.g., week1, week2)" onkeypress="if(event.key==='Enter') handleLogin()" style="padding: 12px; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 8px; font-size: 1em; width: 100%; box-sizing: border-box;">
+                </div>
+                <button onclick="handleLogin()" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color: white; border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px 30px; border-radius: 12px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);">
+                    Confirm
+                </button>
             </div>
         </div>
     </div>
 
 
     <script>
-        // 心情数据存储
+        // 当前week和用户ID
+        let currentWeek = 'week1';
+        let currentUserId = '';
+        
+        // 心情数据存储（按week存储）
+        const emotionDataByWeek = {};
+        
+        // 当前显示的emotionData（用于兼容现有代码）
         const emotionData = {
-            monday: [],
-            tuesday: [],
-            wednesday: [],
-            thursday: [],
-            friday: [],
-            saturday: [],
-            sunday: []
+            day1: [],
+            day2: [],
+            day3: [],
+            day4: [],
+            day5: [],
+            day6: [],
+            day7: []
         };
+
+        // 获取当前是第几天（基于首次使用日期）
+        function getCurrentDay() {
+            if (!currentUserId || !currentWeek) {
+                return 1; // 默认返回day1
+            }
+            
+            const storageKey = `firstUseDate_${currentUserId}_${currentWeek}`;
+            let firstUseDate = localStorage.getItem(storageKey);
+            
+            // 如果localStorage中没有，尝试从后端数据中获取（在loadWeekData中已同步）
+            if (!firstUseDate) {
+                // 检查是否有缓存的meta数据
+                const metaKey = `meta_${currentUserId}_${currentWeek}`;
+                const cachedMeta = localStorage.getItem(metaKey);
+                if (cachedMeta) {
+                    try {
+                        const meta = JSON.parse(cachedMeta);
+                        if (meta.first_use_date) {
+                            firstUseDate = meta.first_use_date;
+                            localStorage.setItem(storageKey, firstUseDate);
+                        }
+                    } catch (e) {
+                        console.error('Error parsing cached meta:', e);
+                    }
+                }
+            }
+            
+            // 如果还是没有，说明是第一次使用，记录当前日期
+            if (!firstUseDate) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                firstUseDate = today.toISOString();
+                localStorage.setItem(storageKey, firstUseDate);
+            }
+            
+            // 计算从首次使用日期到今天的天数差
+            const firstDate = new Date(firstUseDate);
+            firstDate.setHours(0, 0, 0, 0);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const diffTime = today - firstDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // 返回当前是第几天（1-7，循环）
+            const currentDay = ((diffDays % 7) + 7) % 7 + 1;
+            return currentDay;
+        }
+
+        // 获取当前天的key（如'day1', 'day2'等）
+        function getCurrentDayKey() {
+            const day = getCurrentDay();
+            return `day${day}`;
+        }
+
+        // 检查某天是否可以修改
+        function canModifyDay(dayKey) {
+            const currentDayKey = getCurrentDayKey();
+            return dayKey === currentDayKey;
+        }
 
 
         // 心情颜色映射
@@ -921,19 +1275,26 @@
                 updateRangeProgress(this);
             });
 
-
-            // 日期选择器变化时更新按钮状态
-            const daySelect = document.getElementById('daySelect');
-            daySelect.addEventListener('change', function() {
-                updateButtonStates();
+            // 监听情绪选择变化，更新按钮状态
+            // 当情绪选择器变化时更新按钮状态
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.select-option')) {
+                    setTimeout(updateButtonStates, 100);
+                }
             });
-
-            // 初始化按钮状态
-            updateButtonStates();
 
             // 初始化主题
             const savedTheme = localStorage.getItem('theme') || 'light';
             setTheme(savedTheme);
+
+            // 初始化emotion sound buttons为禁用状态
+            const emotionButtons = document.querySelectorAll('.emotion-sound-button');
+            emotionButtons.forEach(button => {
+                button.disabled = true;
+            });
+
+            // 初始时隐藏主要内容
+            document.querySelector('.main-content').style.display = 'none';
         });
 
         // 主题切换功能
@@ -1006,7 +1367,7 @@
             customSelect.classList.remove('open');
             
             // 检查按钮状态
-            updateButtonStates();
+            setTimeout(updateButtonStates, 100);
         }
 
         // 点击外部关闭下拉菜单
@@ -1023,6 +1384,7 @@
             const audioBtn = document.getElementById('audioToggleBtn');
             const audioIcon = audioBtn.querySelector('.audio-icon');
             const audioText = audioBtn.querySelector('.audio-text');
+            const emotionSoundButtons = document.getElementById('emotionSoundButtons');
             
             // 控制所有喇叭按钮的显示/隐藏
             const speakerButtons = document.querySelectorAll('.day-speaker-button');
@@ -1030,11 +1392,17 @@
                 button.style.display = audioModeEnabled ? 'flex' : 'none';
             });
             
+            // 控制emotion sound buttons的启用/禁用
+            const emotionButtons = document.querySelectorAll('.emotion-sound-button');
+            emotionButtons.forEach(button => {
+                button.disabled = !audioModeEnabled;
+            });
+            
             if (audioModeEnabled) {
                 audioBtn.classList.add('active');
                 audioIcon.textContent = '🔇';
                 audioText.textContent = 'Audio Off';
-                showNotification('Audio mode enabled - Click emotion bars to play sounds');
+                showNotification('Audio mode enabled - Click emotion bars or buttons to play sounds');
             } else {
                 audioBtn.classList.remove('active');
                 audioIcon.textContent = '🔊';
@@ -1045,9 +1413,16 @@
 
         // 更新按钮状态
         function updateButtonStates() {
-            const day = document.getElementById('daySelect').value;
+            const day = getCurrentDayKey();
             const addBtn = document.getElementById('addEmotionBtn');
             const modifyBtn = document.getElementById('modifyEmotionBtn');
+            
+            // 检查是否可以修改今天的数据
+            if (!canModifyDay(day)) {
+                addBtn.disabled = true;
+                modifyBtn.disabled = true;
+                return;
+            }
             
             // 检查当前选择的emotion是否已经在今天添加过
             const hasEmotionToday = emotionData[day].some(item => item.emotion === selectedEmotion);
@@ -1065,7 +1440,19 @@
 
         // 修改emotion
         function modifyEmotion() {
-            const day = document.getElementById('daySelect').value;
+            if (!currentUserId || !currentWeek) {
+                showNotification('Please login first');
+                return;
+            }
+
+            const day = getCurrentDayKey();
+            
+            // 检查是否可以修改今天的数据
+            if (!canModifyDay(day)) {
+                showNotification('You can only modify today\'s data');
+                return;
+            }
+            
             const intensity = parseInt(document.getElementById('intensityRange').value);
             
             // 找到该emotion在今天的记录
@@ -1073,11 +1460,18 @@
             
             if (emotionIndex !== -1) {
                 // 更新intensity
-                emotionData[day][emotionIndex].intensity = intensity;
-                emotionData[day][emotionIndex].timestamp = Date.now();
+                const emotionRecord = emotionData[day][emotionIndex];
+                emotionRecord.intensity = intensity;
+                emotionRecord.timestamp = Date.now();
                 
                 // 重新渲染该天的显示（传递isModify=true）
                 updateDayDisplay(day, true);
+                
+                // 保存到后端
+                saveEmotionToBackend(emotionRecord, day);
+                
+                // 更新按钮状态（确保Add按钮保持禁用，Modify按钮保持启用）
+                setTimeout(updateButtonStates, 100);
                 
                 // 显示成功提示
                 showNotification(`Modified ${getDayName(day)} ${getEmotionName(selectedEmotion)} emotion to Level ${intensity}`);
@@ -1086,22 +1480,39 @@
 
         // 添加心情
         function addEmotion() {
-            const day = document.getElementById('daySelect').value;
+            if (!currentUserId || !currentWeek) {
+                showNotification('Please login first');
+                return;
+            }
+
+            const day = getCurrentDayKey();
+            
+            // 检查是否可以修改今天的数据
+            if (!canModifyDay(day)) {
+                showNotification('You can only add emotions to today\'s data');
+                return;
+            }
+            
             const emotion = selectedEmotion;
             const intensity = parseInt(document.getElementById('intensityRange').value);
 
-            // 添加到数据
-            emotionData[day].push({
+            const emotionRecord = {
                 emotion: emotion,
                 intensity: intensity,
                 timestamp: Date.now()
-            });
+            };
+
+            // 添加到本地数据
+            emotionData[day].push(emotionRecord);
 
             // 更新显示
             updateDayDisplay(day);
             
-            // 更新按钮状态
-            updateButtonStates();
+            // 保存到后端
+            saveEmotionToBackend(emotionRecord, day);
+            
+            // 更新按钮状态（在添加后立即更新，确保Add按钮被禁用，Modify按钮启用）
+            setTimeout(updateButtonStates, 100);
             
             // 添加成功提示
             showNotification(`Added ${getDayName(day)} ${getEmotionName(emotion)} emotion (Level ${intensity})`);
@@ -1176,18 +1587,9 @@
             }
         }
 
-        // 获取星期名称
+        // 获取天数名称
         function getDayName(day) {
-            const dayNames = {
-                monday: 'Monday',
-                tuesday: 'Tuesday',
-                wednesday: 'Wednesday',
-                thursday: 'Thursday',
-                friday: 'Friday',
-                saturday: 'Saturday',
-                sunday: 'Sunday'
-            };
-            return dayNames[day];
+            return day.charAt(0).toUpperCase() + day.slice(1).replace('day', 'Day ');
         }
 
         // 获取心情名称
@@ -1211,15 +1613,16 @@
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
                 color: white;
                 padding: 15px 25px;
                 border-radius: 10px;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.1);
                 z-index: 1000;
                 font-weight: 600;
                 transform: translateX(100%);
-                transition: transform 0.3s ease;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             `;
             notification.textContent = message;
             
@@ -1239,37 +1642,63 @@
             }, 3000);
         }
 
+        // 音频文件映射
+        const emotionAudioFiles = {
+            anger: 'static/anger.m4a',
+            enjoyment: 'static/enjoy.m4a',
+            surprise: 'static/surprise.m4a',
+            fear: 'static/fear.m4a',
+            disgust: 'static/disgust.m4a',
+            sadness: 'static/sadness.m4a'
+        };
+
         // 播放音频心情（用于emotion-bar点击播放）
         function playAudioEmotion(emotion, intensity) {
-            // 使用Web Audio API生成音频
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
+            if (!audioModeEnabled) return;
             
-            // 根据心情设置不同的频率
-            const frequencies = {
-                anger: 200,      // 低频率，表示愤怒
-                enjoyment: 400,  // 中高频率，表示快乐
-                surprise: 600,   // 高频率，表示惊讶
-                fear: 150,       // 很低频率，表示恐惧
-                disgust: 250,    // 中低频率，表示厌恶
-                sadness: 180     // 低频率，表示悲伤
-            };
+            const audioFile = emotionAudioFiles[emotion];
+            if (!audioFile) {
+                showNotification(`Audio file not found for ${emotion}`);
+                return;
+            }
             
-            oscillator.frequency.setValueAtTime(frequencies[emotion], audioContext.currentTime);
-            oscillator.type = 'sine';
+            const audio = new Audio(audioFile);
             
-            // 根据强度设置音量
-            const volume = intensity / 5 * 0.3; // 最大音量0.3
-            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+            // 根据强度设置音量 (1-5 映射到 0.2-1.0)
+            const volume = 0.2 + (intensity - 1) * (0.8 / 4); // 1->0.2, 5->1.0
+            audio.volume = Math.min(volume, 1.0);
             
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                showNotification(`Error playing ${getEmotionName(emotion)} audio`);
+            });
             
-            oscillator.start();
-            oscillator.stop(audioContext.currentTime + 0.5); // 播放0.5秒
+            showNotification(`Playing ${getEmotionName(emotion)} audio (Level ${intensity})`);
+        }
+
+        // 播放单个emotion声音（用于emotion sound button点击）
+        function playEmotionSound(emotion) {
+            if (!audioModeEnabled) {
+                showNotification('Please enable Audio mode first');
+                return;
+            }
             
-            showNotification(`Playing ${getEmotionName(emotion)} audio (Volume ${intensity})`);
+            const audioFile = emotionAudioFiles[emotion];
+            if (!audioFile) {
+                showNotification(`Audio file not found for ${emotion}`);
+                return;
+            }
+            
+            const audio = new Audio(audioFile);
+            // surprise的音量为1，其他emotion为0.8
+            audio.volume = emotion === 'surprise' ? 1.0 : 0.8;
+            
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                showNotification(`Error playing ${getEmotionName(emotion)} audio`);
+            });
+            
+            showNotification(`Playing ${getEmotionName(emotion)} sound`);
         }
 
         // 播放某天所有emotion的叠加声音
@@ -1282,50 +1711,239 @@
                 return;
             }
             
+            // 使用Web Audio API来叠加多个音频文件
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const gainNode = audioContext.createGain();
-            gainNode.connect(audioContext.destination);
+            const masterGainNode = audioContext.createGain();
+            masterGainNode.connect(audioContext.destination);
             
-            // 根据心情设置不同的频率
-            const frequencies = {
-                anger: 200,      // 低频率，表示愤怒
-                enjoyment: 400,  // 中高频率，表示快乐
-                surprise: 600,   // 高频率，表示惊讶
-                fear: 150,       // 很低频率，表示恐惧
-                disgust: 250,    // 中低频率，表示厌恶
-                sadness: 180     // 低频率，表示悲伤
-            };
+            // 设置总音量控制，避免过响
+            masterGainNode.gain.setValueAtTime(0.6, audioContext.currentTime);
             
-            // 创建所有emotion的oscillator
-            const oscillators = [];
-            let totalVolume = 0;
+            let loadedCount = 0;
+            const totalEmotions = dayEmotions.length;
             
             dayEmotions.forEach((item, index) => {
-                const oscillator = audioContext.createOscillator();
-                const itemGainNode = audioContext.createGain();
+                const audioFile = emotionAudioFiles[item.emotion];
+                if (!audioFile) {
+                    loadedCount++;
+                    if (loadedCount === totalEmotions) {
+                        showNotification(`Playing ${getDayName(day)} emotions mix (${dayEmotions.length} emotions)`);
+                    }
+                    return;
+                }
                 
-                oscillator.frequency.setValueAtTime(frequencies[item.emotion], audioContext.currentTime);
-                oscillator.type = 'sine';
-                
-                // 根据强度设置音量，并稍微降低以避免过响
-                const volume = (item.intensity / 5) * 0.15; // 降低到0.15避免过响
-                itemGainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-                totalVolume += volume;
-                
-                oscillator.connect(itemGainNode);
-                itemGainNode.connect(gainNode);
-                
-                // 稍微错开开始时间，创造更丰富的音效
-                oscillator.start(audioContext.currentTime + (index * 0.05));
-                oscillator.stop(audioContext.currentTime + 1.0 + (index * 0.05));
-                
-                oscillators.push(oscillator);
+                fetch(audioFile)
+                    .then(response => response.arrayBuffer())
+                    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                    .then(audioBuffer => {
+                        const source = audioContext.createBufferSource();
+                        const itemGainNode = audioContext.createGain();
+                        
+                        source.buffer = audioBuffer;
+                        
+                        // 根据强度设置音量 (1-5 映射到 0.15-0.4)
+                        const volume = 0.15 + (item.intensity - 1) * (0.25 / 4);
+                        itemGainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                        
+                        source.connect(itemGainNode);
+                        itemGainNode.connect(masterGainNode);
+                        
+                        // 同时播放所有音频
+                        source.start(audioContext.currentTime);
+                        
+                        loadedCount++;
+                        if (loadedCount === totalEmotions) {
+                            showNotification(`Playing ${getDayName(day)} emotions mix (${dayEmotions.length} emotions)`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`Error loading audio for ${item.emotion}:`, error);
+                        loadedCount++;
+                        if (loadedCount === totalEmotions) {
+                            showNotification(`Playing ${getDayName(day)} emotions mix (${dayEmotions.length} emotions)`);
+                        }
+                    });
             });
+        }
+
+        // 保存情绪数据到后端
+        async function saveEmotionToBackend(emotionRecord, day) {
+            if (!currentUserId || !currentWeek) {
+                return;
+            }
+
+            // 获取首次使用日期（如果存在）
+            const storageKey = `firstUseDate_${currentUserId}_${currentWeek}`;
+            const firstUseDate = localStorage.getItem(storageKey);
+            const currentDay = getCurrentDay();
+
+            try {
+                const response = await fetch('save.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: currentUserId,
+                        week: currentWeek,
+                        day: day,
+                        emotion_data: emotionRecord,
+                        first_use_date: firstUseDate || null,
+                        current_day: currentDay
+                    })
+                });
+
+                const result = await response.json();
+                if (!result.success) {
+                    console.error('Failed to save:', result.error);
+                }
+            } catch (error) {
+                console.error('Error saving data:', error);
+            }
+        }
+
+        // 允许的用户ID列表
+        const allowedUserIds = ['A07u', 'B22o', 'C3ci', 'D5an', 'E4cho', 'F7nn', 'G9gi', 'test'];
+
+        // 处理登录
+        async function handleLogin() {
+            const userId = document.getElementById('loginUserId').value.trim();
+            const week = document.getElementById('loginWeek').value.trim();
+
+            if (!userId) {
+                showNotification('Please enter User ID');
+                return;
+            }
+
+            // 验证用户ID是否在允许列表中
+            if (!allowedUserIds.includes(userId)) {
+                showNotification('Invalid User ID. Only authorized users can login.');
+                return;
+            }
+
+            if (!week) {
+                showNotification('Please enter week, e.g., week1');
+                return;
+            }
+
+            // 验证week格式
+            const weekMatch = week.match(/^week(\d+)$/i);
+            if (!weekMatch) {
+                showNotification('Invalid week format, please enter like: week1, week2');
+                return;
+            }
+
+            currentUserId = userId;
+            currentWeek = week.toLowerCase();
+
+            // 保存到localStorage
+            localStorage.setItem('userId', currentUserId);
+            localStorage.setItem('currentWeek', currentWeek);
+
+            // 加载数据
+            await loadWeekData();
+
+            // 隐藏弹窗，显示主要内容
+            document.getElementById('loginModal').style.display = 'none';
+            document.querySelector('.main-content').style.display = 'flex';
             
-            // 设置总音量控制
-            gainNode.gain.setValueAtTime(Math.min(totalVolume, 0.5), audioContext.currentTime);
+            // 更新当前day显示
+            const currentDay = getCurrentDay();
+            document.getElementById('currentDayDisplay').textContent = `Day ${currentDay}`;
             
-            showNotification(`Playing ${getDayName(day)} emotions mix (${dayEmotions.length} emotions)`);
+            // 更新按钮状态
+            updateButtonStates();
+        }
+
+        // 显示登录弹窗
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('loginUserId').value = currentUserId || '';
+            document.getElementById('loginWeek').value = currentWeek || '';
+        }
+
+        // 加载week数据
+        async function loadWeekData() {
+            if (!currentUserId || !currentWeek) {
+                return;
+            }
+
+            document.getElementById('currentWeekDisplay').textContent = currentWeek.charAt(0).toUpperCase() + currentWeek.slice(1);
+            
+            // 更新当前day显示
+            const currentDay = getCurrentDay();
+            document.getElementById('currentDayDisplay').textContent = `Day ${currentDay}`;
+
+            try {
+                const response = await fetch('load.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: currentUserId,
+                        week: currentWeek
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    // 同步meta信息（first_use_date）到localStorage
+                    if (result.meta && result.meta.first_use_date) {
+                        const storageKey = `firstUseDate_${currentUserId}_${currentWeek}`;
+                        const metaKey = `meta_${currentUserId}_${currentWeek}`;
+                        
+                        // 如果后端有first_use_date，优先使用后端的（确保所有设备一致）
+                        localStorage.setItem(storageKey, result.meta.first_use_date);
+                        localStorage.setItem(metaKey, JSON.stringify(result.meta));
+                    }
+                    
+                    // 只显示当前week的数据
+                    const weekData = result.data;
+                    
+                    // 清空当前显示
+                    Object.keys(emotionData).forEach(day => {
+                        emotionData[day] = [];
+                    });
+
+                    // 加载当前week的数据
+                    // 兼容旧数据格式（monday-sunday）和新格式（day1-day7）
+                    Object.keys(weekData).forEach(day => {
+                        let targetDay = day;
+                        // 如果是旧格式，转换为新格式
+                        if (day === 'monday') targetDay = 'day1';
+                        else if (day === 'tuesday') targetDay = 'day2';
+                        else if (day === 'wednesday') targetDay = 'day3';
+                        else if (day === 'thursday') targetDay = 'day4';
+                        else if (day === 'friday') targetDay = 'day5';
+                        else if (day === 'saturday') targetDay = 'day6';
+                        else if (day === 'sunday') targetDay = 'day7';
+                        
+                        if (emotionData[targetDay]) {
+                            emotionData[targetDay] = weekData[day] || [];
+                        }
+                    });
+
+                    // 重新渲染所有天的显示
+                    Object.keys(emotionData).forEach(day => {
+                        updateDayDisplay(day, true);
+                    });
+
+                    // 更新当前day显示（基于同步后的first_use_date）
+                    const currentDay = getCurrentDay();
+                    document.getElementById('currentDayDisplay').textContent = `Day ${currentDay}`;
+
+                    // 更新按钮状态
+                    updateButtonStates();
+
+                    showNotification(`Loaded data from ${currentWeek}`);
+                } else {
+                    showNotification('Failed to load data: ' + (result.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showNotification('Error loading data, please check network connection');
+            }
         }
     </script>
 </body>
