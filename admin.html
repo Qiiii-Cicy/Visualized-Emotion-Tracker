@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View - Emotion Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f6fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .user-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .user-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .week-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .week-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .day-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+
+        .day-item strong {
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        .emotion-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            margin: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-style: italic;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="dataContainer" class="container">
+        <div class="header">
+            <h1>Admin View - All Users Data</h1>
+            <button class="btn refresh-btn" onclick="loadAdminData()">Refresh Data</button>
+        </div>
+        <div id="adminContent"></div>
+        <button class="btn logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        async function loadAdminData() {
+            try {
+                const response = await fetch('admin.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    displayAdminData(result.data);
+                } else {
+                    alert('Failed to load data: ' + (result.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error loading admin data:', error);
+                alert('Error loading data, please check network connection');
+            }
+        }
+
+        // 页面加载时自动加载数据
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAdminData();
+        });
+
+        function displayAdminData(allUsersData) {
+            const adminContent = document.getElementById('adminContent');
+            let html = '';
+
+            if (Object.keys(allUsersData).length === 0) {
+                html = '<div class="empty-state">No user data available</div>';
+            } else {
+                Object.keys(allUsersData).forEach(userId => {
+                    html += `<div class="user-section">`;
+                    html += `<h2>User: ${userId}</h2>`;
+                    
+                    const userData = allUsersData[userId];
+                    const weeks = Object.keys(userData).sort((a, b) => {
+                        const numA = parseInt(a.replace('week', ''));
+                        const numB = parseInt(b.replace('week', ''));
+                        return numA - numB;
+                    });
+
+                    if (weeks.length === 0) {
+                        html += '<div class="empty-state">No week data for this user</div>';
+                    } else {
+                        weeks.forEach(week => {
+                            html += `<div class="week-section">`;
+                            html += `<h3>${week}</h3>`;
+                            
+                            const weekData = userData[week];
+                            const days = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7'];
+                            let hasData = false;
+
+                            // 显示meta信息（首次使用日期和当前day）
+                            if (weekData.meta) {
+                                html += `<div class="day-item" style="background: #e3f2fd; border-left: 4px solid #2196f3;">`;
+                                html += `<strong>📅 首次使用日期:</strong> ${weekData.meta.first_use_date_display || '未记录'}<br>`;
+                                html += `<strong>📌 当前是:</strong> <span style="color: #f44336; font-weight: bold;">Day ${weekData.meta.current_day || '未知'}</span>`;
+                                html += `</div>`;
+                            }
+
+                            days.forEach(day => {
+                                const dayData = weekData[day] || [];
+                                if (dayData.length > 0) {
+                                    hasData = true;
+                                    const dayName = day.charAt(0).toUpperCase() + day.slice(1).replace('day', 'Day ');
+                                    html += `<div class="day-item">`;
+                                    html += `<strong>${dayName}:</strong> `;
+                                    const emotions = dayData.map(item => {
+                                        const emotionName = getEmotionName(item.emotion);
+                                        return `<span class="emotion-tag">${emotionName} (Level ${item.intensity})</span>`;
+                                    }).join(' ');
+                                    html += emotions;
+                                    html += `</div>`;
+                                }
+                            });
+
+                            if (!hasData) {
+                                html += '<div class="empty-state">No data for this week</div>';
+                            }
+                            
+                            html += `</div>`;
+                        });
+                    }
+                    
+                    html += `</div>`;
+                });
+            }
+
+            adminContent.innerHTML = html;
+        }
+
+        function getEmotionName(emotion) {
+            const emotionNames = {
+                anger: 'Anger',
+                enjoyment: 'Enjoyment',
+                surprise: 'Surprise',
+                fear: 'Fear',
+                disgust: 'Disgust',
+                sadness: 'Sadness'
+            };
+            return emotionNames[emotion] || emotion;
+        }
+
+        function logout() {
+            // 重新加载数据
+            loadAdminData();
+        }
+    </script>
+</body>
+</html>
+
+
